@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Clock Quiz</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .clock {
+            width: 200px;
+            height: 100px;
+            border: 5px solid #333;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 2em;
+            background-color: #000;
+            color: #0f0;
+        }
+
+        .time-input {
+            margin: 10px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="clock" class="clock"></div>
+        <input type="text" id="timeInput" class="time-input" placeholder="시간을 입력하세요HH:MM">
+        <button id="submitBtn" class="button">제출</button>
+        <p id="result"></p>
+    </div>
+    <button id="nextPage" style="width: 100px; height: 50px; margin: 1px;">다음 문제</button>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const clockElement = document.getElementById('clock');
+            const timeInput = document.getElementById('timeInput');
+            const submitBtn = document.getElementById('submitBtn');
+            const result = document.getElementById('result');
+
+            let randomHour, randomMinute;
+
+            function generateRandomTime() {
+                randomHour = Math.floor(Math.random() * 24);
+                randomMinute = Math.floor(Math.random() * 60);
+                updateClock(randomHour, randomMinute);
+            }
+
+            function updateClock(hour, minute) {
+                const formattedHour = hour.toString().padStart(2, '0');
+                const formattedMinute = minute.toString().padStart(2, '0');
+                clockElement.textContent = `${formattedHour}:${formattedMinute}`;
+            }
+
+            submitBtn.addEventListener('click', () => {
+                const userInput = timeInput.value.split(':');
+                const userHour = parseInt(userInput[0], 10);
+                const userMinute = parseInt(userInput[1], 10);
+
+                if (userHour === randomHour && userMinute === randomMinute) {
+                    result.textContent = '정답입니다';
+                } else {
+                    result.textContent = `틀렸습니다 ${randomHour.toString().padStart(2, '0')}:${randomMinute.toString().padStart(2, '0')}.`;
+                }
+                generateRandomTime(); 
+            });
+
+            generateRandomTime();
+        });
+        document.getElementById('nextPage').addEventListener('click', () => {window.open('주소', '_self');});
+    </script>
+</body>
+</html>

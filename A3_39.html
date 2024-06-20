@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수학 문제</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        .problem {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>수학 문제</h1>
+    <div id="problems"></div>
+    <button onclick="answers()">답 제출</button>
+    <div id="results" class="result"></div>
+    <button id="nextPage" style="width: 100px; height: 50px; margin: 1px;">다음 문제</button>
+
+    <script>
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generateProblem() {
+            const num1 = getRandomInt(1, 9);
+            const num2 = getRandomInt(1, 9);
+            const operators = ['+', '-', '*', '/'];
+            const operator = operators[getRandomInt(0, operators.length - 1)];
+            let problem = `${num1} ${operator} ${num2}`;
+
+            
+            if (operator === '/') {
+                problem = `${num1 * num2} / ${num1}`;
+            }
+
+            return {
+                problem: problem,
+                solution: eval(problem)
+            };
+        }
+
+        function generateProblems(count) {
+            const problemsDiv = document.getElementById('problems');
+            problemsDiv.innerHTML = ''; 
+
+            for (let i = 0; i < count; i++) {
+                const { problem, solution } = generateProblem();
+                const problemDiv = document.createElement('div');
+                problemDiv.className = 'problem';
+                problemDiv.innerHTML = `
+                    <span>${problem} = </span>
+                    <input type="text" class="answer" data-solution="${solution.toFixed(2)}">
+                `;
+                problemsDiv.appendChild(problemDiv);
+            }
+        }
+
+        function answers() {
+            const answers = document.getElementsByClassName('answer');
+            let correct = 0;
+
+            for (const answer of answers) {
+                const userAnswer = parseFloat(answer.value);
+                const correctAnswer = parseFloat(answer.getAttribute('data-solution'));
+
+                if (Math.abs(userAnswer - correctAnswer) < 0.01) {
+                    correct++;
+                    answer.style.color = 'green';
+                } else {
+                    answer.style.color = 'red';
+                }
+            }
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.textContent = ` ${correct} 개맞혔다.`;
+        }
+
+        generateProblems(5);
+       
+        document.getElementById('nextPage').addEventListener('click', () => {window.open('주소', '_self');});
+    </script>
+</body>
+</html>
